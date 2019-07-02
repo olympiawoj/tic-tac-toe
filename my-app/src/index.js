@@ -53,48 +53,43 @@ class Game extends React.Component {
     xIsNext: true
   };
 
-  // handleClick(i) {
-  //   //grabs every board history
-  //   const history = this.state.history;
-  //   //grabs the latest item added to the list
-  //   const current = history[history.length - 1];
-  //   //creates copy of current array
-  //   const squares = current.squares.slice();
-  //   //if calculateWinner(squares) returns a winner OR there's a value in squares[i], then return that array
-  //   if (calculateWinner(squares) || squares[i]) {
-  //     return;
-  //   }
-  //   squares[i] = this.state.xIsNext ? "X" : "O";
-  //   this.setState({
-  //     //Within the Game’s handleClick method, we concatenate new history entries onto history.
-  //     history: history.concat([{ squares: squares }]),
-  //     xIsNext: !this.state.xIsNext
-  //   });
-  //   console.log("testing");
-  // }
-
   handleClick(i) {
+    //grabs every board history
     const history = this.state.history;
+    //grabs the latest item added to the list
     const current = history[history.length - 1];
+    //creates copy of current array
     const squares = current.squares.slice();
+    //if calculateWinner(squares) returns a winner OR there's a value in squares[i], then return that array
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState({
-      history: history.concat([
-        {
-          squares: squares
-        }
-      ]),
+      //Within the Game’s handleClick method, we concatenate new history entries onto history.
+      history: history.concat([{ squares: squares }]),
       xIsNext: !this.state.xIsNext
     });
+    console.log("testing");
   }
 
   render() {
     const history = this.state.history;
     const current = history[history.length - 1];
     const winner = calculateWinner(current.squares);
+
+    //if there is a move, then display that text, otherwise display go to game start
+    const moves = history.map((step, move) => {
+      const desc = move ? "Go to move #" + move : "Go to game start";
+
+      return (
+        //we are going to return a list of buttons which if clicked, will take us back to that point in history
+        //when we click on each button, we're going to invoke the jumpTo method and pass in the move we want to jump back to
+        <li>
+          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        </li>
+      );
+    });
 
     let status;
     if (winner) {
@@ -104,13 +99,14 @@ class Game extends React.Component {
     }
 
     return (
+      //add display moves here
       <div className="game">
         <div className="game-board">
           <Board squares={current.squares} onClick={i => this.handleClick(i)} />
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
