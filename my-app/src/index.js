@@ -75,7 +75,7 @@ class Game extends React.Component {
     });
     console.log("testing");
   }
-
+  //if step/move # is even, that means xIsNext is true, otherwise it's false
   jumpTo(step) {
     this.setState({
       stepNumber: step,
@@ -85,7 +85,7 @@ class Game extends React.Component {
 
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
     //if there is a move, then display that text, otherwise display go to game start
