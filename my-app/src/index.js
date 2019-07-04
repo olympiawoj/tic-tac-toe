@@ -50,12 +50,13 @@ class Game extends React.Component {
         squares: Array(9).fill(null)
       }
     ],
+    stepNumber: 0,
     xIsNext: true
   };
 
   handleClick(i) {
     //grabs every board history
-    const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     //grabs the latest item added to the list
     const current = history[history.length - 1];
     //creates copy of current array
@@ -68,9 +69,18 @@ class Game extends React.Component {
     this.setState({
       //Within the Game’s handleClick method, we concatenate new history entries onto history.
       history: history.concat([{ squares: squares }]),
+      //sets stepNumber equal to history.length
+      stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
     console.log("testing");
+  }
+
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: step % 2 === 0
+    });
   }
 
   render() {
@@ -85,7 +95,7 @@ class Game extends React.Component {
       return (
         //we are going to return a list of buttons which if clicked, will take us back to that point in history
         //when we click on each button, we're going to invoke the jumpTo method and pass in the move we want to jump back to
-        <li>
+        <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
